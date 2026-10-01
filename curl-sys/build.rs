@@ -358,6 +358,10 @@ fn main() {
             cfg.define("USE_OPENSSL", None)
                 .file("curl/lib/vtls/openssl.c");
 
+            if target.contains("-apple-") && cfg!(feature = "apple-sectrust") {
+                cfg.define("USE_APPLE_SECTRUST", None);
+            }
+
             println!("cargo:rustc-cfg=link_openssl");
             if let Some(path) = env::var_os("DEP_OPENSSL_INCLUDE") {
                 cfg.include(path);
