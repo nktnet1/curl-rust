@@ -359,7 +359,8 @@ fn main() {
                 .file("curl/lib/vtls/openssl.c");
 
             if target.contains("-apple-") && cfg!(feature = "apple-sectrust") {
-                cfg.define("USE_APPLE_SECTRUST", None);
+                cfg.define("USE_APPLE_SECTRUST", None)
+                    .file("curl/lib/vtls/apple.c");
             }
 
             println!("cargo:rustc-cfg=link_openssl");
