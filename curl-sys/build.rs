@@ -3,6 +3,36 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::Command;
 
+// curl 8.22 limits config-win32.h to old Visual Studio project builds.
+// curl-sys builds libcurl directly with cc, so reuse the platform settings
+// as curl_config.h without the build-system guard.
+fn write_windows_config(dst: &Path) {
+    let config = fs::read_to_string("curl/lib/config-win32.h").unwrap();
+    let mut lines = config.lines();
+    let mut output = String::new();
+    let mut removed_version_guard = false;
+
+    while let Some(line) = lines.next() {
+        if line == "#if !defined(_MSC_VER) || _MSC_VER > 1800" {
+            assert_eq!(
+                lines.next(),
+                Some(
+                    "#error This manual configuration requires MSVC 2010-2013 (IDE Project builds)"
+                )
+            );
+            assert_eq!(lines.next(), Some("#endif"));
+            removed_version_guard = true;
+            continue;
+        }
+
+        output.push_str(line);
+        output.push('\n');
+    }
+
+    assert!(removed_version_guard);
+    fs::write(dst.join("curl_config.h"), output).unwrap();
+}
+
 fn main() {
     println!("cargo:rerun-if-changed=curl");
     println!(
@@ -54,6 +84,9 @@ fn main() {
     let dst = PathBuf::from(env::var_os("OUT_DIR").unwrap());
     let include = dst.join("include");
     let build = dst.join("build");
+    if windows {
+        write_windows_config(&dst);
+    }
     println!("cargo:root={}", dst.display());
     println!("cargo:include={}", include.display());
     println!("cargo:static=1");
@@ -97,7 +130,7 @@ fn main() {
             .replace("@LIBCURL_LIBS@", "")
             .replace("@SUPPORT_FEATURES@", "")
             .replace("@SUPPORT_PROTOCOLS@", "")
-            .replace("@CURLVERSION@", "8.21.0"),
+            .replace("@CURLVERSION@", "8.22.0"),
     )
     .unwrap();
 
@@ -371,7 +404,9 @@ fn main() {
 
     // Configure platform-specific details.
     if windows {
-        cfg.define("WIN32", None)
+        cfg.define("HAVE_CONFIG_H", None)
+            .include(&dst)
+            .define("WIN32", None)
             .define("USE_THREADS_WIN32", None)
             .define("HAVE_IOCTLSOCKET_FIONBIO", None)
             .define("USE_WINSOCK", None)
