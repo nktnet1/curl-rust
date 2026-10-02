@@ -7,7 +7,7 @@ publish = false
 edition = "2018"
 
 [dependencies]
-curl-sys = { path = "../curl-sys" }
+curl-sys = { package = "nktnet-curl-sys", path = "../curl-sys" }
 libc = "0.2"
 
 [build-dependencies]

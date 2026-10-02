@@ -52,5 +52,5 @@ if [ -z "$NO_RUN" ]; then
     cargo run --manifest-path systest/Cargo.toml --target $TARGET --features curl-sys/static-curl,curl-sys/protocol-ftp $features
 
     cargo doc --no-deps --target $TARGET $features
-    cargo doc --no-deps -p curl-sys --target $TARGET $features
+    cargo doc --no-deps -p nktnet-curl-sys --target $TARGET $features
 fi
