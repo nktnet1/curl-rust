@@ -376,6 +376,11 @@ fn main() {
         cfg.define("USE_OPENSSL", None)
             .define("OPENSSL_IS_AWSLC", None)
             .file("curl/lib/vtls/openssl.c");
+
+        if target.contains("-apple-") && cfg!(feature = "apple-sectrust") {
+            cfg.define("USE_APPLE_SECTRUST", None)
+                .file("curl/lib/vtls/apple.c");
+        }
     } else if cfg!(feature = "rustls") {
         cfg.define("USE_RUSTLS", None)
             .file("curl/lib/vtls/cipher_suite.c")
