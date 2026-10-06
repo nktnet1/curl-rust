@@ -73,7 +73,10 @@ fn main() {
 
         // Next, fall back and try to use pkg-config if its available.
         if windows {
-            if try_vcpkg() {
+            // vcpkg does not expose enough information to verify whether the
+            // discovered libcurl was built with HTTP/3 support. Build the
+            // vendored HTTP/3 stack instead so the feature is guaranteed.
+            if !cfg!(feature = "http3") && try_vcpkg() {
                 return;
             }
         } else if try_pkg_config() {
