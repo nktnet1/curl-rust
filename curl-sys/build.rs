@@ -381,6 +381,11 @@ fn main() {
             cfg.define("USE_APPLE_SECTRUST", None)
                 .file("curl/lib/vtls/apple.c");
         }
+
+        if windows {
+            cfg.define("CURL_CA_NATIVE", None)
+                .define("CURL_DISABLE_CA_SEARCH", None);
+        }
     } else if cfg!(feature = "rustls") {
         cfg.define("USE_RUSTLS", None)
             .file("curl/lib/vtls/cipher_suite.c")
