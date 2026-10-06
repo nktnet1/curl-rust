@@ -9,6 +9,7 @@ repository = "https://github.com/nktnet1/curl-rust"
 homepage = "https://github.com/nktnet1/curl-rust"
 description = "Native bindings to the libcurl library"
 documentation = "https://docs.rs/nktnet-curl-sys"
+readme = "../README.md"
 categories = ["external-ffi-bindings"]
 edition = "2018"
 exclude = ["curl/docs/", "curl/tests/"]
