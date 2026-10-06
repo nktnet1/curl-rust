@@ -351,6 +351,8 @@ fn main() {
             .define("USE_NGHTTP3", None)
             .define("NGTCP2_STATICLIB", None)
             .define("NGHTTP3_STATICLIB", None)
+            .file("curl/lib/vquic/capsule.c")
+            .file("curl/lib/vquic/cf-capsule.c")
             .file("curl/lib/vquic/cf-ngtcp2.c")
             .file("curl/lib/vquic/cf-ngtcp2-cmn.c");
 
