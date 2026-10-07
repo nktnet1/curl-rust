@@ -17,7 +17,7 @@ status = "passively-maintained"
 
 [dependencies]
 libc = "0.2.42"
-curl-sys = { package = "nktnet-curl-sys", path = "curl-sys", version = "=0.4.91-nktnet.1", default-features = false }
+curl-sys = { package = "nktnet-curl-sys", path = "curl-sys", version = "=0.4.91-nktnet.2", default-features = false }
 socket2 = "0.6.0"
 
 # Unix platforms use OpenSSL for now to provide SSL functionality

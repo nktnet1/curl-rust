@@ -1,6 +1,6 @@
 [package]
 name = "nktnet-curl-sys"
-version = "0.4.91-nktnet.1+curl-8.22.0"
+version = "0.4.91-nktnet.2+curl-8.22.0"
 authors = ["Khiet Tam Nguyen <tamkhietnguyen1@gmail.com", "Alex Crichton <alex@alexcrichton.com>", "Stephen M. Coakley <me@stephencoakley.com>"]
 links = "curl"
 build = "build.rs"
