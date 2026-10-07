@@ -32,10 +32,9 @@ if [ "$TARGET" != "x86_64-pc-windows-gnu" ] && [ "$TARGET" != "i686-pc-windows-m
 then
     cargo test --target $TARGET --no-run --features rustls,static-curl $features
 fi
-# HTTP/3 also uses AWS-LC. Skip the same targets that cannot currently build
-# that dependency in this CI environment.
-if [ "$TARGET" != "x86_64-pc-windows-gnu" ] && [ "$TARGET" != "i686-pc-windows-msvc" ]
-then
+# HTTP/3 has additional native build dependencies and a higher dependency MSRV.
+# Exercise it only in CI jobs that explicitly opt in to HTTP/3 coverage.
+if [ "$HTTP3_TESTS" = "1" ]; then
     cargo test --target $TARGET --no-run --features http3,static-curl $features
 fi
 # Then with all extra protocols enabled.
@@ -45,14 +44,16 @@ if [ -z "$NO_RUN" ]; then
     cargo test --target $TARGET --features static-curl $features
     cargo test --target $TARGET --features static-curl,protocol-ftp $features
     cargo test --target $TARGET --features static-curl,http2 $features
-    if [ "$TARGET" != "i686-pc-windows-msvc" ]; then
+    if [ "$HTTP3_TESTS" = "1" ]; then
         cargo test --target $TARGET --features static-curl,http3 $features
     fi
 
     case "$TARGET" in
         *-apple-*)
             cargo test --target $TARGET --features apple-sectrust $features
-            cargo test --target $TARGET --features apple-sectrust,http3 $features
+            if [ "$HTTP3_TESTS" = "1" ]; then
+                cargo test --target $TARGET --features apple-sectrust,http3 $features
+            fi
             ;;
     esac
 
