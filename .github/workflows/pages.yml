@@ -28,6 +28,17 @@ jobs:
           sudo apt-get install -y libclang-dev libkrb5-dev
       - name: Build documentation
         run: cargo doc --no-deps --all-features
+      - name: Add documentation landing page
+        run: |
+          test -f target/doc/curl/index.html
+          cat > target/doc/index.html <<'EOF'
+          <!doctype html>
+          <meta charset="utf-8">
+          <meta http-equiv="refresh" content="0; url=curl/">
+          <link rel="canonical" href="curl/">
+          <title>curl-rust documentation</title>
+          <p><a href="curl/">Open curl-rust documentation</a>.</p>
+          EOF
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
